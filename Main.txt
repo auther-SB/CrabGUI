@@ -1,0 +1,406 @@
+
+function showMainGUI()
+    local mainGui = Instance.new("ScreenGui")
+    mainGui.Name = "MainCrabGUI"
+    mainGui.Parent = game.CoreGui
+
+    local mainFrame = Instance.new("Frame")
+    mainFrame.Size = UDim2.new(0, 500, 0, 380)
+    mainFrame.Position = UDim2.new(0.5, -250, 0.2, 0)
+    mainFrame.BackgroundTransparency = 1
+    mainFrame.Parent = mainGui
+
+    local backgroundFrame = Instance.new("Frame")
+    backgroundFrame.Size = UDim2.new(1, 0, 1, 0)
+    backgroundFrame.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+    backgroundFrame.BackgroundTransparency = 0
+    backgroundFrame.ZIndex = 1
+    backgroundFrame.Parent = mainFrame
+
+    local topBar = Instance.new("Frame")
+    topBar.Size = UDim2.new(1, 0, 0, 30)
+    topBar.Position = UDim2.new(0, 0, 0, 0)
+    topBar.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+    topBar.Parent = mainFrame
+
+    local corner = Instance.new("UICorner")
+    corner.CornerRadius = UDim.new(0, 10)
+    corner.Parent = topBar
+
+    local corner1 = Instance.new("UICorner")
+    corner1.CornerRadius = UDim.new(0, 10)
+    corner1.Parent = backgroundFrame
+
+    local titleLabel = Instance.new("TextLabel")
+    titleLabel.Size = UDim2.new(1, -60, 1, 0)
+    titleLabel.Position = UDim2.new(0, 5, 0, 0)
+    titleLabel.Text = "CrabGUI"
+    titleLabel.TextScaled = true
+    titleLabel.TextColor3 = Color3.new(1, 1, 1)
+    titleLabel.BackgroundTransparency = 1
+    titleLabel.Parent = topBar
+
+    local closeButton = Instance.new("TextButton")
+    closeButton.Size = UDim2.new(0, 30, 1, 0)
+    closeButton.Position = UDim2.new(1, -35, 0, 0)
+    closeButton.Text = "X"
+    closeButton.TextScaled = true
+    closeButton.TextColor3 = Color3.new(1, 0, 0)
+    closeButton.BackgroundTransparency = 1
+    closeButton.Parent = topBar
+    closeButton.MouseButton1Click:Connect(function()
+        mainGui:Destroy()
+    end)
+
+    local minimizeButton = Instance.new("TextButton")
+    minimizeButton.Size = UDim2.new(0, 30, 1, 0)
+    minimizeButton.Position = UDim2.new(1, -70, 0, 0)
+    minimizeButton.Text = "-"
+    minimizeButton.TextScaled = true
+    minimizeButton.TextColor3 = Color3.new(1, 1, 1)
+    minimizeButton.BackgroundTransparency = 1
+    minimizeButton.Parent = topBar
+
+    local dragging, dragInput, dragStart, startPos
+    local function update(input)
+        local delta = input.Position - dragStart
+        mainFrame.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+    end
+
+    topBar.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 then
+            dragging = true
+            dragStart = input.Position
+            startPos = mainFrame.Position
+            input.Changed:Connect(function()
+                if input.UserInputState == Enum.UserInputState.End then
+                    dragging = false
+                end
+            end)
+        end
+    end)
+
+    topBar.InputChanged:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseMovement then
+            dragInput = input
+        end
+    end)
+
+    game:GetService("UserInputService").InputChanged:Connect(function(input)
+        if input == dragInput and dragging then
+            update(input)
+        end
+    end)
+
+    local optionsFrame = Instance.new("ScrollingFrame")
+    optionsFrame.Size = UDim2.new(0.2, 0, 1, -30)
+    optionsFrame.Position = UDim2.new(0, 0, 0, 30)
+    optionsFrame.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+    optionsFrame.Parent = mainFrame
+    optionsFrame.CanvasSize = UDim2.new(0, 0, 1, 0)  
+    optionsFrame.ScrollBarThickness = 0  
+
+    local optionsCorner = Instance.new("UICorner")
+    optionsCorner.CornerRadius = UDim.new(0, 10)
+    optionsCorner.Parent = optionsFrame
+
+    local buttonLayout = Instance.new("UIListLayout")
+    buttonLayout.Parent = optionsFrame
+    buttonLayout.Padding = UDim.new(0, 5)
+    buttonLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+    buttonLayout.SortOrder = Enum.SortOrder.LayoutOrder
+
+    local worldButton = Instance.new("TextButton")
+    worldButton.Size = UDim2.new(0, 90, 0, 40)
+    worldButton.Text = "World"
+    worldButton.TextScaled = true
+    worldButton.TextColor3 = Color3.new(1, 1, 1)
+    worldButton.Parent = optionsFrame
+
+    local playerButton = Instance.new("TextButton")
+    playerButton.Size = UDim2.new(0, 90, 0, 40)
+    playerButton.Text = "Player"
+    playerButton.TextScaled = true
+    playerButton.TextColor3 = Color3.new(1, 1, 1)
+    playerButton.Parent = optionsFrame
+
+    local playerFrame = Instance.new("Frame")
+    playerFrame.Size = UDim2.new(0.8, 0, 1, -30)
+    playerFrame.Position = UDim2.new(0.2, 0, 0, 30)
+    playerFrame.BackgroundTransparency = 1
+    playerFrame.Parent = mainFrame
+
+	local screenGui = Instance.new("ScreenGui")
+	screenGui.Name = "FlyGui"
+	screenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+
+	local bar = Instance.new("Frame")
+	bar.Size = UDim2.new(0, 50, 0, 10)
+	bar.Position = UDim2.new(0.5, -80, 0, 140)
+	bar.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+	bar.BackgroundTransparency = 0
+	bar.BorderSizePixel = 0
+	bar.Parent = playerFrame
+
+    local flyLabel = Instance.new("TextLabel")
+    flyLabel.Size = UDim2.new(0, 100, 0, 30)
+    flyLabel.Position = UDim2.new(0, 10, 0, 130)
+    flyLabel.Text = "Fly (Q)"
+    flyLabel.TextScaled = true
+    flyLabel.TextColor3 = Color3.new(1, 1, 1)
+    flyLabel.BackgroundTransparency = 1
+    flyLabel.Parent = playerFrame
+
+	local barUICorner = Instance.new("UICorner")
+	barUICorner.Parent = bar
+
+	local toggleButton = Instance.new("TextButton")
+	toggleButton.Size = UDim2.new(0, 20, 0, 20) 
+	toggleButton.Position = UDim2.new(0, 0, 0, -5) 
+	toggleButton.Text = ""
+	toggleButton.BackgroundColor3 = Color3.fromRGB(255, 0, 0) 
+	toggleButton.BorderSizePixel = 0
+	toggleButton.Parent = bar
+
+	local buttonUICorner = Instance.new("UICorner")
+	buttonUICorner.CornerRadius = UDim.new(0.5, 0)
+	buttonUICorner.Parent = toggleButton
+
+	local buttonOffset = 5  
+	local extraOffset = -10  
+
+	local flyEnabled = false
+	local flyKey = Enum.KeyCode.Q
+	local camera = game:GetService("Workspace").CurrentCamera
+	local player = game:GetService("Players").LocalPlayer
+	local character = player.Character or player.CharacterAdded:Wait()
+	local hrp = character:WaitForChild("HumanoidRootPart")
+	local humanoid = character:FindFirstChildOfClass("Humanoid")
+
+	local bodyGyro = Instance.new("BodyGyro")
+	bodyGyro.MaxTorque = Vector3.new(1, 1, 1) * 10^6
+	bodyGyro.P = 10^6
+
+	local bodyVel = Instance.new("BodyVelocity")
+	bodyVel.MaxForce = Vector3.new(1, 1, 1) * 10^6
+	bodyVel.P = 10^4
+
+	local isFlying = false
+	local movement = {forward = 0, backward = 0, right = 0, left = 0}
+
+	local function setFlying(flying)
+		isFlying = flying
+		bodyGyro.Parent = isFlying and hrp or nil
+		bodyVel.Parent = isFlying and hrp or nil
+		bodyGyro.CFrame = hrp.CFrame
+		bodyVel.Velocity = Vector3.new()
+	end
+
+	local function onUpdate(dt)
+		if isFlying and flyEnabled then
+			local cf = camera.CFrame
+			local direction = cf.RightVector * (movement.right - movement.left) + cf.LookVector * (movement.forward - movement.backward)
+			if direction:Dot(direction) > 0 then
+				direction = direction.Unit
+			end
+			bodyGyro.CFrame = cf
+			bodyVel.Velocity = direction * humanoid.WalkSpeed * 3
+		end
+	end
+
+	local function onKeyPress(input, gameProcessedEvent)
+		if not gameProcessedEvent and input.KeyCode == flyKey and flyEnabled then
+			if not humanoid or humanoid:GetState() == Enum.HumanoidStateType.Dead then
+				return
+			end
+			setFlying(not isFlying)
+		end
+	end
+
+	local function movementBind(actionName, inputState, inputObject)
+		if inputState == Enum.UserInputState.Begin then
+			movement[actionName] = 1
+		elseif inputState == Enum.UserInputState.End then
+			movement[actionName] = 0
+		end
+		return Enum.ContextActionResult.Pass
+	end
+
+	local function onToggleClick()
+		flyEnabled = not flyEnabled
+		toggleButton.BackgroundColor3 = flyEnabled and Color3.fromRGB(0, 255, 0) or Color3.fromRGB(255, 0, 0)
+
+		local barWidth = bar.Size.X.Offset
+		local buttonWidth = toggleButton.Size.X.Offset
+
+		local newPositionX = flyEnabled and (barWidth - buttonWidth - buttonOffset - extraOffset) or 0
+
+		toggleButton.Position = UDim2.new(0, newPositionX, 0, (bar.Size.Y.Offset - buttonWidth) / 2)
+		
+		if not flyEnabled then
+			setFlying(false)
+		end
+	end
+
+	toggleButton.MouseButton1Click:Connect(onToggleClick)
+	game:GetService("UserInputService").InputBegan:Connect(onKeyPress)
+	game:GetService("ContextActionService"):BindAction("forward", movementBind, false, Enum.PlayerActions.CharacterForward)
+	game:GetService("ContextActionService"):BindAction("backward", movementBind, false, Enum.PlayerActions.CharacterBackward)
+	game:GetService("ContextActionService"):BindAction("left", movementBind, false, Enum.PlayerActions.CharacterLeft)
+	game:GetService("ContextActionService"):BindAction("right", movementBind, false, Enum.PlayerActions.CharacterRight)
+	game:GetService("RunService").RenderStepped:Connect(onUpdate)
+
+    local speedLabel = Instance.new("TextLabel")
+    speedLabel.Size = UDim2.new(0, 260, 0, 30)
+    speedLabel.Position = UDim2.new(0, 10, 0, 10)
+    speedLabel.Text = "Walkspeed"
+    speedLabel.TextScaled = true
+    speedLabel.TextColor3 = Color3.new(1, 1, 1)
+    speedLabel.BackgroundTransparency = 1
+    speedLabel.Parent = playerFrame
+
+    local speedSliderBar = Instance.new("Frame")
+    speedSliderBar.Size = UDim2.new(0, 260, 0, 10)
+    speedSliderBar.Position = UDim2.new(0, 10, 0, 40)
+    speedSliderBar.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+    speedSliderBar.Parent = playerFrame
+
+    local speedSliderCorner = Instance.new("UICorner")
+    speedSliderCorner.CornerRadius = UDim.new(0, 5)
+    speedSliderCorner.Parent = speedSliderBar
+
+    local speedSliderButton = Instance.new("TextButton")
+    speedSliderButton.Size = UDim2.new(0, 20, 0, 20)
+    speedSliderButton.Position = UDim2.new(0, 0, 0, -5)
+    speedSliderButton.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+    speedSliderButton.Text = ""
+    speedSliderButton.Parent = speedSliderBar
+
+    local speedSliderButtonCorner = Instance.new("UICorner")
+    speedSliderButtonCorner.CornerRadius = UDim.new(1, 0)
+    speedSliderButtonCorner.Parent = speedSliderButton
+
+    local speedValueLabel = Instance.new("TextLabel")
+    speedValueLabel.Size = UDim2.new(0, 50, 0, 20)
+    speedValueLabel.Position = UDim2.new(1, 10, 0, -5)
+    speedValueLabel.Text = "16"
+    speedValueLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+    speedValueLabel.BackgroundTransparency = 1
+    speedValueLabel.TextXAlignment = Enum.TextXAlignment.Left
+    speedValueLabel.Parent = speedSliderBar
+
+    local minSpeed = 16
+    local maxSpeed = 500
+    local speedRange = maxSpeed - minSpeed
+
+    local function updateSpeedSlider(input)
+        local relativeX = input.Position.X - speedSliderBar.AbsolutePosition.X
+        local sliderPos = math.clamp(relativeX, 0, speedSliderBar.AbsoluteSize.X)
+        speedSliderButton.Position = UDim2.new(0, sliderPos, 0, -5)
+
+        local sliderValue = math.floor(minSpeed + (sliderPos / speedSliderBar.AbsoluteSize.X) * speedRange)
+        speedValueLabel.Text = tostring(sliderValue)
+
+        game:GetService("Players").LocalPlayer.Character.Humanoid.WalkSpeed = sliderValue
+    end
+
+    speedSliderButton.MouseButton1Down:Connect(function()
+        local dragging = true
+
+        local function onMouseMove(input)
+            if dragging then
+                updateSpeedSlider(input)
+            end
+        end
+
+        local function onMouseUp()
+            dragging = false
+        end
+
+        game:GetService("UserInputService").InputChanged:Connect(onMouseMove)
+        game:GetService("UserInputService").InputEnded:Connect(onMouseUp)
+    end)
+
+    local jumpPowerLabel = Instance.new("TextLabel")
+    jumpPowerLabel.Size = UDim2.new(0, 260, 0, 30)
+    jumpPowerLabel.Position = UDim2.new(0, 10, 0, 80)
+    jumpPowerLabel.Text = "Jump Power"
+    jumpPowerLabel.TextScaled = true
+    jumpPowerLabel.TextColor3 = Color3.new(1, 1, 1)
+    jumpPowerLabel.BackgroundTransparency = 1
+    jumpPowerLabel.Parent = playerFrame
+
+    local jumpPowerSliderBar = Instance.new("Frame")
+    jumpPowerSliderBar.Size = UDim2.new(0, 260, 0, 10)
+    jumpPowerSliderBar.Position = UDim2.new(0, 10, 0, 110)
+    jumpPowerSliderBar.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+    jumpPowerSliderBar.Parent = playerFrame
+
+    local jumpPowerSliderCorner = Instance.new("UICorner")
+    jumpPowerSliderCorner.CornerRadius = UDim.new(0, 5)
+    jumpPowerSliderCorner.Parent = jumpPowerSliderBar
+
+    local jumpPowerSliderButton = Instance.new("TextButton")
+    jumpPowerSliderButton.Size = UDim2.new(0, 20, 0, 20)
+    jumpPowerSliderButton.Position = UDim2.new(0, 0, 0, -5)
+    jumpPowerSliderButton.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+    jumpPowerSliderButton.Text = ""
+    jumpPowerSliderButton.Parent = jumpPowerSliderBar
+
+    local jumpPowerSliderButtonCorner = Instance.new("UICorner")
+    jumpPowerSliderButtonCorner.CornerRadius = UDim.new(1, 0)
+    jumpPowerSliderButtonCorner.Parent = jumpPowerSliderButton
+
+    local jumpPowerValueLabel = Instance.new("TextLabel")
+    jumpPowerValueLabel.Size = UDim2.new(0, 50, 0, 20)
+    jumpPowerValueLabel.Position = UDim2.new(1, 10, 0, -5)
+    jumpPowerValueLabel.Text = "50"
+    jumpPowerValueLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+    jumpPowerValueLabel.BackgroundTransparency = 1
+    jumpPowerValueLabel.TextXAlignment = Enum.TextXAlignment.Left
+    jumpPowerValueLabel.Parent = jumpPowerSliderBar
+
+    local minJumpPower = 50
+    local maxJumpPower = 500
+    local jumpPowerRange = maxJumpPower - minJumpPower
+
+    local function updateJumpPowerSlider(input)
+        local relativeX = input.Position.X - jumpPowerSliderBar.AbsolutePosition.X
+        local sliderPos = math.clamp(relativeX, 0, jumpPowerSliderBar.AbsoluteSize.X)
+        jumpPowerSliderButton.Position = UDim2.new(0, sliderPos, 0, -5)
+
+        local sliderValue = math.floor(minJumpPower + (sliderPos / jumpPowerSliderBar.AbsoluteSize.X) * jumpPowerRange)
+        jumpPowerValueLabel.Text = tostring(sliderValue)
+
+        game:GetService("Players").LocalPlayer.Character.Humanoid.JumpPower = sliderValue
+    end
+
+    jumpPowerSliderButton.MouseButton1Down:Connect(function()
+        local dragging = true
+
+        local function onMouseMove(input)
+            if dragging then
+                updateJumpPowerSlider(input)
+            end
+        end
+
+        local function onMouseUp()
+            dragging = false
+        end
+
+        game:GetService("UserInputService").InputChanged:Connect(onMouseMove)
+        game:GetService("UserInputService").InputEnded:Connect(onMouseUp)
+    end)
+
+    local guiVisible = true
+    local UserInputService = game:GetService("UserInputService")
+
+    UserInputService.InputBegan:Connect(function(input)
+        if input.KeyCode == Enum.KeyCode.F4 then
+            guiVisible = not guiVisible
+            mainGui.Enabled = guiVisible
+        end
+    end)
+end
+
+showMainGUI()
